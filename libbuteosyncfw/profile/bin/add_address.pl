@@ -30,7 +30,7 @@ print "Second Argument Passed to add_address script is $ARGV[2] ";
 if ( $ARGV[2] eq "root" ) {
 print "ADDING THE ADDRESS ONLY TO /etc/profiles. Please run this as USER if you want to update /home/user \n"; 
 
-$temp="/etc/sync/profiles/sync/temp";
+$temp="/etc/buteo/profiles/sync/temp";
 
 @files = </etc/sync/profiles/sync/*.xml>;
 foreach $file (@files) {
@@ -66,9 +66,9 @@ rename($temp,$file)
 
 print "ADDING THE ADDRESS ONLY TO /home/user.  Please run this as ROOT if you want to update /etc/sync \n"; 
 
-$temp="/home/user/.sync/profiles/sync/temp";
+$temp="/home/user/.cache/msyncd/profiles/sync/temp";
 
-@files = </home/user/.sync/profiles/sync/*.xml>;
+@files = </home/user/.cache/msyncd/profiles/sync/*.xml>;
 foreach $file (@files) {
 	  print $file . "\n";
 open(INPUTFILE, '<', $file)
