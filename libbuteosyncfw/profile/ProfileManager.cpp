@@ -114,6 +114,7 @@ ProfileManagerPrivate::ProfileManagerPrivate(const QString &aPrimaryPath,
     iSecondaryPath(aSecondaryPath)
 {
 
+    /*
     if (iPrimaryPath.endsWith(QDir::separator()))
     {
         iPrimaryPath.chop(1);
@@ -122,6 +123,7 @@ ProfileManagerPrivate::ProfileManagerPrivate(const QString &aPrimaryPath,
     {
         iSecondaryPath.chop(1);
     } // no else
+    */
 
     LOG_DEBUG("Primary profile path set to" << iPrimaryPath);
     LOG_DEBUG("Secondary profile path set to" << iSecondaryPath);
@@ -161,6 +163,7 @@ SyncLog *ProfileManagerPrivate::loadLog(const QString &aProfileName)
 
     QString fileName = iPrimaryPath + QDir::separator() + Profile::TYPE_SYNC + QDir::separator() +
             LOG_DIRECTORY + QDir::separator() + aProfileName + LOG_EXT + FORMAT_EXT;
+
 
     if (!QFile::exists(fileName))
     {
@@ -351,13 +354,11 @@ ProfileManager::~ProfileManager()
 
 Profile *ProfileManager::profile(const QString &aName, const QString &aType)
 {
-
     return d_ptr->load(aName, aType);
 }
 
 SyncProfile *ProfileManager::syncProfile(const QString &aName)
 {
-
     Profile *p = profile(aName, Profile::TYPE_SYNC);
     SyncProfile *syncProfile = 0;
     if (p != 0 && p->type() == Profile::TYPE_SYNC)
@@ -1241,7 +1242,7 @@ QDateTime ProfileManager::getNextRetryInterval(const SyncProfile* aProfile)
        !iSyncRetriesInfo[aProfile->name()].isEmpty())
     {
        quint32 mins = iSyncRetriesInfo[aProfile->name()].takeFirst();
-       nextRetryInterval = QDateTime::currentDateTime().addSecs(mins * 60); 
+       nextRetryInterval = QDateTime::currentDateTime().addSecs(mins * 60);
        LOG_DEBUG("syncretries : retry for profile" << aProfile->name() << "in" << mins <<"minutes");
        LOG_DEBUG("syncretries :" << iSyncRetriesInfo[aProfile->name()].count() <<"attempts remain");
     }
