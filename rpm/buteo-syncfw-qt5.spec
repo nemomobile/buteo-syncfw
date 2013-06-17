@@ -1,4 +1,4 @@
-Name: buteo-syncfw
+Name: buteo-syncfw-qt5
 Version: 0.6.1
 Release: 1
 Summary: Synchronization backend
@@ -7,16 +7,17 @@ URL: https://github.com/nemomobile/buteo-syncfw
 License: LGPLv2.1
 Source0: %{name}-%{version}.tar.gz
 BuildRequires: doxygen, fdupes
-BuildRequires: pkgconfig(QtCore)
+BuildRequires: pkgconfig(Qt5Core)
+BuildRequires: pkgconfig(Qt5DBus)
+BuildRequires: pkgconfig(Qt5Sql)
+BuildRequires: pkgconfig(Qt5Test)
 BuildRequires: pkgconfig(dbus-1)
 BuildRequires: pkgconfig(contextsubscriber-1.0)
-BuildRequires: pkgconfig(accounts-qt)
-BuildRequires: pkgconfig(libsignon-qt)
-BuildRequires: pkgconfig(QtSystemInfo)
-BuildRequires: libiphb-devel
-Requires: %{name}-msyncd
-# TODO: needs a proper fix
-# Patch0: 0001-Synchronizer-removeProfile-remove-profiles-even-if-p.patch
+BuildRequires: pkgconfig(accounts-qt5)
+BuildRequires: pkgconfig(libsignon-qt5)
+# FIXME, seems to be a typo in packaging
+BuildRequires: pkgconfig(Qt0SystemInfo)
+BuildRequires: pkgconfig(libiphb)
 
 %description
 %{summary}.
@@ -89,7 +90,7 @@ Group: Development/Libraries
 
 
 %build
-qmake
+qmake -qt=5 -recursive
 make
 
 

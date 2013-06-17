@@ -1,5 +1,6 @@
 TEMPLATE = lib
-TARGET = buteosyncfw
+equals(QT_MAJOR_VERSION, 4): TARGET = buteosyncfw
+equals(QT_MAJOR_VERSION, 5): TARGET = buteosyncfw5
 DEPENDPATH += . clientfw  common  pluginmgr  profile
 INCLUDEPATH += . clientfw  common  pluginmgr  profile
 
@@ -83,7 +84,10 @@ QMAKE_CLEAN += lib$${TARGET}.prl pkgconfig/*
 
 # install
 target.path = /usr/lib/
-headers.path = /usr/include/buteosyncfw
+
+equals(QT_MAJOR_VERSION, 4): headers.path = /usr/include/buteosyncfw
+equals(QT_MAJOR_VERSION, 5): headers.path = /usr/include/buteosyncfw5
+
 headers.files = common/Logger.h \
            common/LogMacros.h \
            common/SyncCommonDefs.h \
@@ -116,8 +120,8 @@ headers.files = common/Logger.h \
            profile/TargetResults.h
 
 utility.path = /opt/tests/buteo-syncfw
-utility.files = bin/*.pl \
-    bin/*.sh
+utility.files = ../bin/*.pl \
+    ../bin/*.sh
 
 INSTALLS += target headers utility
 
@@ -144,7 +148,7 @@ CONFIG(debug,debug|release){
         += \
         -fprofile-arcs \
         -ftest-coverage
-     
+
     coverage.commands = @echo \
         "Built with coverage support..."
     build_pass|!debug_and_release : coverage.depends = all

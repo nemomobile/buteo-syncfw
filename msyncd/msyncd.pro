@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = 
+TARGET = msyncd
 QT += xml \
     dbus \
     sql \
@@ -8,34 +8,37 @@ QT -= gui
 CONFIG += qdbus \
     link_pkgconfig \
     create_pc \
-    create_prl \
-    mobility
-
-MOBILITY += systeminfo
+    create_prl
 
 QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 QMAKE_PKGCONFIG_LIBDIR  = $$target.path
 QMAKE_PKGCONFIG_INCDIR  = $$headers.path
 pkgconfig.files = $${TARGET}.pc
 
-DEPENDPATH += . 
+DEPENDPATH += .
 INCLUDEPATH += . \
     ../ \
     ../libbuteosyncfw/pluginmgr \
     ../libbuteosyncfw/common \
-    ../libbuteosyncfw/profile \
-    /usr/include/accounts-qt \
-    /usr/include/iphbd/ \
-    
-PKGCONFIG += dbus-1 libsignon-qt accounts-qt
+    ../libbuteosyncfw/profile
+
+
+PKGCONFIG += dbus-1 libiphb
+
+equals(QT_MAJOR_VERSION, 4): {
+    PKGCONFIG += libsignon-qt accounts-qt
+    CONFIG += mobility
+    MOBILITY += systeminfo
+    LIBS += -lbuteosyncfw
+}
+equals(QT_MAJOR_VERSION, 5): {
+    PKGCONFIG += libsignon-qt5 accounts-qt5 Qt0SystemInfo
+    LIBS += -lbuteosyncfw5
+}
 
 QMAKE_LIBDIR_QT += ../libsyncprofile/
 
-LIBS += -L../libbuteosyncfw \
-    -lbuteosyncfw \
-    -laccounts-qt \
-    -liphb 
-
+LIBS += -L../libbuteosyncfw
 
 # Input
 HEADERS += ServerActivator.h \
@@ -99,13 +102,14 @@ QMAKE_CXXFLAGS = -Wall \
 target.path = /usr/bin/
 loglevel.files = bin/set_sync_log_level
 loglevel.path = /etc/buteo/
-meego.files = bin/msyncd.desktop
-meego.path = /etc/xdg/autostart/
+service.files = bin/msyncd.service
+service.path = /usr/lib/systemd/user/
 syncwidget.path = /etc/syncwidget/
 syncwidget.files = com.meego.msyncd
 INSTALLS += target \
     loglevel \
-    syncwidget
+    syncwidget \
+    service
 
 # clean
 QMAKE_CLEAN += $(TARGET)
@@ -117,7 +121,7 @@ QMAKE_CLEAN += lib$${TARGET}.prl pkgconfig/*
 # #####################################################################
 coverage.CONFIG += recursive
 QMAKE_EXTRA_TARGETS += coverage
-CONFIG(debug,debug|release) { 
+CONFIG(debug,debug|release) {
     QMAKE_EXTRA_TARGETS += cov_cxxflags \
         cov_lflags
     cov_cxxflags.target = coverage
@@ -130,7 +134,7 @@ CONFIG(debug,debug|release) {
         += \
         -fprofile-arcs \
         -ftest-coverage
-    
+
     # QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
     # QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage
     # -ftest-coverage

@@ -1,19 +1,20 @@
 SOURCEPATH += . \
     ../../../msyncd
-    
-INCLUDEPATH += /usr/include/iphbd/ \
-/usr/include/signon-qt
+
 DEFINES +=  UNIT_TEST
 QT += xml \
     dbus
 CONFIG += qdbus \
-    link_pkgconfig \
-    mobility
+    link_pkgconfig
 
-MOBILITY += systeminfo
+equals(QT_MAJOR_VERSION, 4): {
+    CONFIG += mobility
+    MOBILITY += systeminfo
+}
 
-PKGCONFIG += dbus-1
-LIBS += -liphb -lsignon-qt
+PKGCONFIG += dbus-1 libiphb
+
+equals(QT_MAJOR_VERSION, 5): PKGCONFIG += Qt0SystemInfo
 
 SOURCES += ServerThread.cpp \
     ServerThreadTest.cpp \
@@ -95,7 +96,7 @@ HEADERS += ServerThread.h \
     SyncOnChangeScheduler.h \
     StorageChangeNotifier.h
 
-OTHER_FILES += 
+OTHER_FILES +=
 
 # for compiling on meego
 linux-g++-maemo {
@@ -106,4 +107,3 @@ linux-g++-maemo {
 } else {
   message("Compiling without USBModed")
 }
-
