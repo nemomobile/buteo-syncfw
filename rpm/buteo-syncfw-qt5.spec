@@ -15,8 +15,7 @@ BuildRequires: pkgconfig(dbus-1)
 BuildRequires: pkgconfig(contextsubscriber-1.0)
 BuildRequires: pkgconfig(accounts-qt5)
 BuildRequires: pkgconfig(libsignon-qt5)
-# FIXME, seems to be a typo in packaging
-BuildRequires: pkgconfig(Qt0SystemInfo)
+BuildRequires: pkgconfig(Qt5SystemInfo)
 BuildRequires: pkgconfig(libiphb)
 
 %description
@@ -46,6 +45,10 @@ Requires: %{name} = %{version}-%{release}
 Summary: Buteo sync daemon
 Group: System/Libraries
 Requires: %{name} = %{version}-%{release}
+Requires: systemd
+Requires: systemd-user-session-targets
+Provides: buteo-syncfw-msyncd = %{version}
+Obsoletes: buteo-syncfw-msyncd < %{version}
 
 %description msyncd
 %{summary}.
@@ -53,6 +56,7 @@ Requires: %{name} = %{version}-%{release}
 %files msyncd
 %defattr(-,root,root,-)
 %config %{_libdir}/systemd/user/*.service
+%{_libdir}/systemd/user/user-session.target.wants/*.service
 %config %{_sysconfdir}/syncwidget/*
 %{_bindir}/msyncd
 
@@ -98,7 +102,20 @@ make
 make INSTALL_ROOT=%{buildroot} install
 chmod +x %{buildroot}/opt/tests/buteo-syncfw/*.pl %{buildroot}/opt/tests/buteo-syncfw/*.sh
 %fdupes %{buildroot}/opt/tests/buteo-syncfw/
+mkdir -p %{buildroot}%{_libdir}/systemd/user/user-session.target.wants
+ln -s ../msyncd.service %{buildroot}%{_libdir}/systemd/user/user-session.target.wants/
 
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+if [ "$1" -ge 1 ]; then
+    systemctl-user daemon-reload || true
+    systemctl-user restart msyncd.service || true
+fi
+
+%postun
+/sbin/ldconfig
+if [ "$1" -eq 0 ]; then
+    systemctl-user stop msyncd.service || true
+    systemctl-user daemon-reload || true
+fi
