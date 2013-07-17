@@ -39,7 +39,8 @@ TransportTracker::TransportTracker(QObject *aParent) :
 {
     FUNCTION_CALL_TRACE;
 
-    iTransportStates[Sync::CONNECTIVITY_USB] = false;
+    // FIXME: Hardcode the USB connectivity for now
+    iTransportStates[Sync::CONNECTIVITY_USB] = true;
     iTransportStates[Sync::CONNECTIVITY_BT] = false;
     iTransportStates[Sync::CONNECTIVITY_INTERNET] = false;
 
