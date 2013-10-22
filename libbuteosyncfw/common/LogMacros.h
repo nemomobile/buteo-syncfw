@@ -45,6 +45,14 @@
 #define LOG_DEBUG(msg) LOG_MSG_L(QtDebugMsg, msg)
 #define LOG_TRACE(msg) LOG_MSG_L(QtDebugMsg, msg)
 #define LOG_TRACE_PLAIN(msg) LOG_MSG_L_PLAIN(QtDebugMsg, msg)
+/*! \brief Resets the Buteo installed logger to the Qt default
+ *! \see SET_BUTEO_LOGGER
+ */
+#define LOG_RESET qInstallMessageHandler(0)
+/*! \brief Sets the logger to Buteo logger again
+ *! \see LOG_RESET
+ */
+#define SET_BUTEO_LOGGER if(Buteo::Logger::instance()->enabled()) Buteo::Logger::setLogLevelFromFile()
 
 /*!
  * Creates a trace message to log when the function is entered and exited.

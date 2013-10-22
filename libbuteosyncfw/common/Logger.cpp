@@ -34,9 +34,9 @@
 using namespace Buteo;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-void logMessageHandler(QtMsgType aType, const QMessageLogContext&, const QString& aMsg)
+void Logger::logMessageHandler(QtMsgType aType, const QMessageLogContext&, const QString& aMsg)
 #else
-void logMessageHandler(QtMsgType aType, const char *aMsg)
+void Logger::logMessageHandler(QtMsgType aType, const char *aMsg)
 #endif
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -49,6 +49,35 @@ void logMessageHandler(QtMsgType aType, const char *aMsg)
 const int Logger::DEFAULT_INDENT_SIZE = 4;
 
 Logger *Logger::sInstance = NULL;
+
+void Logger::setLogLevelFromFile()
+{
+    if(QFile::exists(LOGGER_CONFIG_FILE)) {
+        // read the config level from the file and set
+        // that level
+        QFile file(LOGGER_CONFIG_FILE);
+        if(file.open(QIODevice::ReadOnly)) {
+            bool ok;
+            int level = file.readLine().simplified().toInt(&ok,10);
+            if(ok)
+            {
+                Buteo::Logger::createInstance(SYNC_LOG_FILE_PATH);
+                if(!Buteo::Logger::instance()->setLogLevel(level)) {
+                    qWarning() << "invalid log level" ;
+                }
+                else
+                {
+                    qDebug()  << "Setting Log Level to " << level;
+                }
+            }
+            else
+            {
+                Buteo::Logger::createInstance();
+            }
+            file.close();
+        }
+    }
+}
 
 Logger *Logger::instance()
 {

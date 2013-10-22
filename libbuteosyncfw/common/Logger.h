@@ -32,7 +32,10 @@
 #include <QMutex>
 #include <QString>
 #include <QTextStream>
+#include <SyncCommonDefs.h>
 
+const QString LOGGER_CONFIG_FILE( "/etc/buteo/set_sync_log_level" );
+const QString SYNC_LOG_FILE_PATH( Sync::syncCacheDir() + QDir::separator() + "synchronizer.log");
 
 namespace Buteo {
     
@@ -131,6 +134,12 @@ public:
     QBitArray getLogLevelArray();
 
     bool enabled(){return iEnabled;}
+
+    static void setLogLevelFromFile();
+
+    static void logMessageHandler(QtMsgType aType,
+                                  const QMessageLogContext&,
+                                  const QString& aMsg);
 
 private:
     Logger(const QString &aLogFileName, bool aUseStdOut, int aIndentSize);
