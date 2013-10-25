@@ -16,6 +16,8 @@ QMAKE_PKGCONFIG_LIBDIR  = $$target.path
 QMAKE_PKGCONFIG_INCDIR  = $$headers.path
 pkgconfig.files = $${TARGET}.pc
 
+#DEFINES += WANT_TRACE
+
 DEPENDPATH += .
 INCLUDEPATH += . \
     ../ \
