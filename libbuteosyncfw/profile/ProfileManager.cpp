@@ -780,9 +780,7 @@ SyncProfile *ProfileManager::createTempSyncProfile (const QString &destAddress, 
     saveNewProfile = true;
     QString profileDisplayName = mapVal.value("Name").toString();
     if (profileDisplayName.isEmpty()) {
-        //Todo : What to show if name is empty !!
-        //Fixes 171340
-        profileDisplayName = QString ("qtn_sync_dest_name_device_default");
+        profileDisplayName = destAddress;
     }
 
     LOG_INFO("Profile Name :" << profileDisplayName);
