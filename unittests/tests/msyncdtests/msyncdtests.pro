@@ -17,6 +17,8 @@ PKGCONFIG += dbus-1 libiphb
 
 equals(QT_MAJOR_VERSION, 5): PKGCONFIG += Qt5SystemInfo
 
+LIBS += -L../../../libbuteosyncfw -lbuteosyncfw5
+
 SOURCES += ServerThread.cpp \
     ServerThreadTest.cpp \
     StorageBookerTest.cpp \
@@ -32,7 +34,6 @@ SOURCES += ServerThread.cpp \
     PluginRunner.cpp \
     ClientThread.cpp \
     ClientThreadTest.cpp\
-    TransportTracker.cpp \
     TransportTrackerTest.cpp \
     PluginRunnerTest.cpp \
     ClientPluginRunner.cpp \
@@ -49,7 +50,6 @@ SOURCES += ServerThread.cpp \
     SynchronizerTest.cpp \
     SyncAlarmInventory.cpp \
     IPHeartBeat.cpp \
-    NetworkManager.cpp \
     IPHeartBeatTest.cpp \
     SyncSigHandler.cpp \
     SyncSigHandlerTest.cpp \
@@ -70,7 +70,6 @@ HEADERS += ServerThread.h \
     PluginRunner.h \
     ClientThread.h \
     ClientThreadTest.h\
-    TransportTracker.h \
     TransportTrackerTest.h \
     PluginRunnerTest.h \
     ClientPluginRunner.h \
@@ -89,7 +88,6 @@ HEADERS += ServerThread.h \
     SyncAlarmInventory.h \
     SynchronizerTest.h \
     IPHeartBeat.h \
-    NetworkManager.h \
     IPHeartBeatTest.h \
     SyncSigHandler.h \
     SyncSigHandlerTest.h \

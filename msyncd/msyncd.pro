@@ -16,6 +16,8 @@ QMAKE_PKGCONFIG_LIBDIR  = $$target.path
 QMAKE_PKGCONFIG_INCDIR  = $$headers.path
 pkgconfig.files = $${TARGET}.pc
 
+#DEFINES += BUTEO_ENABLE_DEBUG
+
 DEPENDPATH += .
 INCLUDEPATH += . \
     ../ \
@@ -49,7 +51,6 @@ LIBS += -L../libbuteosyncfw
 
 # Input
 HEADERS += ServerActivator.h \
-    TransportTracker.h \
     synchronizer.h \
     SyncDBusInterface.h \
     SyncBackupProxy.h \
@@ -67,7 +68,6 @@ HEADERS += ServerActivator.h \
     ClientPluginRunner.h \
     ServerPluginRunner.h \
     SyncAlarmInventory.h \
-    NetworkManager.h \
     IPHeartBeat.h \
     SyncSigHandler.h \
     StorageChangeNotifier.h \
@@ -75,7 +75,6 @@ HEADERS += ServerActivator.h \
     SyncOnChangeScheduler.h
 
 SOURCES += ServerActivator.cpp \
-    TransportTracker.cpp \
     main.cpp \
     synchronizer.cpp \
     SyncDBusAdaptor.cpp \
@@ -92,7 +91,6 @@ SOURCES += ServerActivator.cpp \
     ClientPluginRunner.cpp \
     ServerPluginRunner.cpp \
     SyncAlarmInventory.cpp \
-    NetworkManager.cpp \
     IPHeartBeat.cpp \
     SyncSigHandler.cpp \
     StorageChangeNotifier.cpp \
