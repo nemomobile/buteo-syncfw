@@ -694,10 +694,10 @@ SyncProfile::CurrentSyncStatus SyncProfile::currentSyncStatus() const
         if ((syncResult->majorCode() == SyncResults::SYNC_RESULT_SUCCESS) &&
             (syncResult->minorCode() == SyncResults::NO_ERROR))
             syncStatus = SyncProfile::SYNC_SUCCESS;
-        else if (syncResult->majorCode() == SyncResults::SYNC_RESULT_FAILED)
-            syncStatus = SyncProfile::SYNC_FAILED;
         else if (syncResult->majorCode() == SyncResults::SYNC_RESULT_CANCELLED)
             syncStatus = SyncProfile::SYNC_CANCLLED;
+        else
+            syncStatus = SyncProfile::SYNC_FAILED;
     } else
         syncStatus = SyncProfile::SYNC_NEVER_HAPPENED;
 
