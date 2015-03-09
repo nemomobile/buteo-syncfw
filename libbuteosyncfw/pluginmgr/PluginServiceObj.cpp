@@ -1,7 +1,7 @@
 /*
 * This file is part of buteo-sync-plugins package
 *
-* Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
+* Copyright (C) 2013-2015 Jolla Ltd. and/or its subsidiary(-ies).
 *
 * Author: Sateesh Kavuri <sateesh.kavuri@gmail.com>
 *
@@ -167,7 +167,13 @@ bool PluginServiceObj::startSync()
         LOG_WARNING( "PluginServiceObj::startSync(): called on uninitialized plugin" );
         return false;
     }
-    return iPlugin->startSync();
+
+    if (!iPlugin->startSync()) {
+        return false;
+    }
+
+    Q_EMIT syncStarted();
+    return true;
 }
 
 #else

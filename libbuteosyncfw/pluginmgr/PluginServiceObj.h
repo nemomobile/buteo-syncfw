@@ -1,7 +1,7 @@
 /*
 * This file is part of buteo-sync-plugins package
 *
-* Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
+* Copyright (C) 2013-2015 Jolla Ltd. and/or its subsidiary(-ies).
 *
 * Author: Sateesh Kavuri <sateesh.kavuri@gmail.com>
 *
@@ -57,6 +57,7 @@ public Q_SLOTS: // METHODS
     void suspend();
 #endif
 Q_SIGNALS: // SIGNALS
+    void syncStarted();
     void accquiredStorage(const QString &aMimeType);
     void error(const QString &aProfileName, const QString &aMessage, int aErrorCode);
     void newSession(const QString &aDestination);
