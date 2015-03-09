@@ -29,6 +29,10 @@
 #define DBUS_SERVICE_NAME_PREFIX "com.buteo.msyncd.plugin."
 #define DBUS_SERVICE_OBJ_PATH "/"
 
+#ifndef PLUGIN_INACTIVITY_TIMEOUT
+#  define PLUGIN_INACTIVITY_TIMEOUT (20000) // ms
+#endif
+
 int main( int argc, char** argv )
 {
     QCoreApplication app( argc, argv );
@@ -76,6 +80,20 @@ int main( int argc, char** argv )
                        << profileName << " registered at dbus "
                        << DBUS_SERVICE_NAME_PREFIX + profileName
                        << " and path " << DBUS_SERVICE_OBJ_PATH );
+
+            // Set up inactivity timer which quits the event loop if either
+            // a) plugin doesn't start doing anything within 20 sec; or
+            // b) sync doesn't get restarted and the process isn't killed
+            // within 20 sec after sync is finished. OOP plugins are not
+            // supposed to be sitting forever in event loop doing nothing,
+            // especially if the process that started them, dies.
+            QTimer inactivityTimer;
+            QObject::connect(serviceObj, SIGNAL(syncStarted()), &inactivityTimer, SLOT(stop()));
+            QObject::connect(serviceObj, SIGNAL(error(QString,QString,int)), &inactivityTimer, SLOT(start()));
+            QObject::connect(serviceObj, SIGNAL(success(QString,QString)), &inactivityTimer, SLOT(start()));
+            QObject::connect(&inactivityTimer, SIGNAL(timeout()), &app, SLOT(quit()));
+            inactivityTimer.start(PLUGIN_INACTIVITY_TIMEOUT);
+
             // TODO: Should any unix signals be handled?
             retn = app.exec();
             connection.unregisterObject(DBUS_SERVICE_OBJ_PATH);
