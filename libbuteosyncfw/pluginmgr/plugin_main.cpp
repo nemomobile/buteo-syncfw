@@ -29,6 +29,24 @@
 #define DBUS_SERVICE_NAME_PREFIX "com.buteo.msyncd.plugin."
 #define DBUS_SERVICE_OBJ_PATH "/"
 
+#ifdef BUTEO_OOPP_QCONNMANBEARER_BUG_WORKAROUND
+#include <link.h>
+#include <dlfcn.h>
+// Prevent libqconnmanbearer from unloading to avoid crashes on exit.
+// NB: Don't use QStringLiteral in dynamically unloadable code!
+static int BUTEO_OOPP_QCONNMANBEARER_BUG_WORKAROUND(struct dl_phdr_info* info, size_t, void*)
+{
+    static const char plugin[] = "libqconnmanbearer.so";
+    const char* found = strstr(info->dlpi_name, plugin);
+    if (found && !found[sizeof(plugin)-1]) {
+        LOG_DEBUG(info->dlpi_name);
+        dlopen(info->dlpi_name, RTLD_LAZY);
+        return 1;
+    }
+    return 0;
+}
+#endif
+
 int main( int argc, char** argv )
 {
     QCoreApplication app( argc, argv );
@@ -92,5 +110,10 @@ int main( int argc, char** argv )
     }
 
     delete serviceObj;
+
+#ifdef BUTEO_OOPP_QCONNMANBEARER_BUG_WORKAROUND
+    dl_iterate_phdr(BUTEO_OOPP_QCONNMANBEARER_BUG_WORKAROUND, NULL);
+#endif
+
     return retn;
 }
