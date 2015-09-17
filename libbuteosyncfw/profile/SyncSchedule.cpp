@@ -348,18 +348,16 @@ QDateTime SyncSchedule::nextSyncTime(const QDateTime &aPrevSync) const
     {
         LOG_DEBUG("Rush Interval is controlled by a external process.");
         // Set next sync to rush end
+        const bool isRush(d_ptr->isRush(now));
         QDateTime nextSyncRush;
-        if (d_ptr->isRush(now)) {
-            nextSyncRush.setTime(d_ptr->iRushEnd);
-            nextSyncRush.setDate(now.date());
-            if (now.time() > d_ptr->iRushEnd)
-            {
-                nextSyncRush = nextSyncRush.addDays(1);
-            }
-            d_ptr->adjustDate(nextSyncRush, d_ptr->iRushDays);
-            LOG_DEBUG("Rush controlled by external process, next scheduled sync at rush end " << nextSyncRush.toString());
+        nextSyncRush.setTime(isRush ? d_ptr->iRushEnd : d_ptr->iRushBegin);
+        nextSyncRush.setDate(now.date());
+        if (now.time() > d_ptr->iRushEnd)
+        {
+            nextSyncRush = nextSyncRush.addDays(1);
         }
-        LOG_DEBUG("nextSyncRush" << nextSyncRush.toString());
+        d_ptr->adjustDate(nextSyncRush, d_ptr->iRushDays);
+        LOG_DEBUG("Rush controlled by external process, next scheduled sync at rush " << (isRush ? "end" : "begin") << nextSyncRush.toString());
         // Use next sync time calculated with rush settings if necessary.
         if (nextSyncRush.isValid()) {
             // check to see if we should use it, or instead use the next non-rush sync time.
